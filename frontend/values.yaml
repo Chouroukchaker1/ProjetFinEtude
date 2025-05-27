@@ -1,34 +1,54 @@
 replicaCount: 3
 
 image:
-  repository: chouroukchaker/frontenddevops
+  repository: chouroukchaker/frontenddevops  # 🛠 Assure-toi que cette image existe sur DockerHub !
   tag: latest
   pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
-  port: 3000
+  port: 80
 
 env:
-  - name: REACT_APP_SERVER_URL
-    value: http://backend:5000  # ✅ NOM CORRECT DU SERVICE BACKEND
+  - name: MONGO_URI
+    value: mongodb://mongodb:27017/Nouvelair
+  - name: PORT
+    value: "80"  # Port utilisé par le conteneur frontend (généralement 80 si c’est NGINX)
+  - name: BACKEND_URL
+    value: http://backend:5000  # Le nom du service backend dans Kubernetes
 
 ingress:
   enabled: true
-  annotations: {}
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
     - host: mern-app.local
       paths:
         - path: /
-          pathType: Prefix  # ✅ Requis pour Kubernetes >= 1.19
-  tls: []  # Pas de certificat TLS
+          pathType: Prefix
+  tls: []  # Si tu veux activer HTTPS plus tard
 
 serviceAccount:
   create: true
   name: ""
 
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 5
+  maxReplicas: 3
   targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
