@@ -1,7 +1,7 @@
-replicaCount: 3
+replicaCount: 2
 
 image:
-  repository: chouroukchaker/frontenddevops  # 🛠 Assure-toi que cette image existe sur DockerHub !
+  repository: chouroukchaker/frontenddevops
   tag: latest
   pullPolicy: IfNotPresent
 
@@ -10,12 +10,12 @@ service:
   port: 80
 
 env:
+  - name: PORT
+    value: "80"
+  - name: BACKEND_URL
+    value: http://backend:5000
   - name: MONGO_URI
     value: mongodb://mongodb:27017/Nouvelair
-  - name: PORT
-    value: "80"  # Port utilisé par le conteneur frontend (généralement 80 si c’est NGINX)
-  - name: BACKEND_URL
-    value: http://backend:5000  # Le nom du service backend dans Kubernetes
 
 ingress:
   enabled: true
@@ -23,11 +23,11 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
-    - host: mern-app.local
+    - host: frontend.local
       paths:
         - path: /
           pathType: Prefix
-  tls: []  # Si tu veux activer HTTPS plus tard
+  tls: []
 
 serviceAccount:
   create: true
@@ -35,11 +35,11 @@ serviceAccount:
 
 resources:
   limits:
-    cpu: 200m
-    memory: 256Mi
+    cpu: 300m
+    memory: 512Mi
   requests:
     cpu: 100m
-    memory: 128Mi
+    memory: 256Mi
 
 autoscaling:
   enabled: false
