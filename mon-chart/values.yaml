@@ -2,10 +2,10 @@ replicaCount: 3
 
 image:
   repository: chouroukchaker/backenddevops
-  tag: v1.0.0                # Remplacez par un tag réel et valide
+  tag: latest              # Utilise le tag existant
   pullPolicy: Always
-  pullSecrets:
-    - name: regcred          # Secret Docker pour authentification privée
+  # pullSecrets:
+  #   - name: regcred      # Décommenter uniquement si votre image est privée
 
 service:
   type: ClusterIP
