@@ -1,34 +1,50 @@
-replicaCount: 3
+replicaCount: 1
 
 image:
   repository: chouroukchaker/frontenddevops
-  tag: latest
   pullPolicy: IfNotPresent
+  tag: latest
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+securityContext: {}
 
 service:
   type: ClusterIP
   port: 3000
 
-env:
-  - name: REACT_APP_SERVER_URL
-    value: http://server:5000
-
 ingress:
-  enabled: true
+  enabled: false
+  className: ""
   annotations: {}
   hosts:
-    - host: mern-app.local
+    - host: frontend.local
       paths:
         - path: /
-          pathType: Prefix  # ✅ Obligatoire pour Kubernetes >= 1.19
+          pathType: ImplementationSpecific
   tls: []
 
-serviceAccount:
-  create: true
-  name: ""
-
+resources: {}
 autoscaling:
   enabled: false
-  minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+env:
+  - name: REACT_APP_SERVER_URL
+    value: http://devop-backend:5000  # Corrige si ton service backend a un autre nom ou port
+
+containerPort: 3000
+
+imagePullSecrets: []
