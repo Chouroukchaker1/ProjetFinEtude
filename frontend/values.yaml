@@ -20,6 +20,7 @@ ingress:
     - host: mern-app.local
       paths:
         - path: /
+          pathType: Prefix  # ✅ Obligatoire pour Kubernetes >= 1.19
   tls: []
 
 serviceAccount:
